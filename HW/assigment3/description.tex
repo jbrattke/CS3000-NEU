@@ -180,7 +180,7 @@ scheduling problem:
  3 & 1 \\ 
  4 & 0 \\ 
  5 & 2 \\ 
- 6 & 5 \\ 
+ 6 & 4 \\ 
  7 & 3 \\ 
  \hline
 \end{tabular}
@@ -241,6 +241,43 @@ input the $d[1\ldots n]$ and $f$ and computes the locations where chargers will 
   algorithm needs to produce the optimal set of charger locations, not only its
   value.  Your algorithm may output the set of locations as a list of its
   locations (in terms of distances from the EVGo charger along I-90W).
+
+\begin{algorithm}[H]
+$M \rightarrow []$ \\
+$M[1] \rightarrow v[1]$ \\
+\Fn{$findOPT(v, n)$} {
+	\For{$i=2 \to n$} {
+		$M[i] = max(M[i-1], v_i + M[p(i)])$\\
+	}
+	\Return M[n]
+}
+
+\Fn{$p(i)$} {
+	\For{$j=i-1 \to 1$} {
+		\If{$d[i] - d[j] <= f$} {
+			\Return j
+		}
+	}
+}
+
+\Fn{$findChargers(d, v, i$)}{
+	$S \rightarrow []$ \\
+	\While{$i > 0$} {
+		\If{$i == 1$} {
+			$S.append(1)$ \\
+			$i \rightarrow 0$
+		}
+		\ElseIf{$M[i] > v_i + M[p(i)]$} {
+			$i -= 1$
+		}
+		\Else {
+			$S.append(i)$\\
+			$i \rightarrow p(i)$
+		}
+	}
+	\Return S
+}
+\end{algorithm}
 
 \item[{\bf (c)}]
   Analyze the running time and space usage of your algorithm.
